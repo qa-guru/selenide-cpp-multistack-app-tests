@@ -11,7 +11,8 @@ chromedriver --port=9515 &
 cmake -B build && cmake --build build && ./build/login_test
 ```
 
-Tests hit the prod deployment. New suite = new `tests/*_test.cpp`.
+Tests run against
+[autotests.ai](https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login).
 
 ## License
 
