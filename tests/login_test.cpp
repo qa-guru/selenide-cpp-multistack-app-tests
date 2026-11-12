@@ -10,6 +10,7 @@ TEST(LoginTest, wrongPassword) {
     $("[data-testid=submit-button]").click();
     $("[data-testid=error-message]")
         .shouldHave(have::exactText("Wrong login or password"));
+    closeWebDriver();
 }
 
 TEST(LoginTest, validCredentials) {
@@ -19,4 +20,5 @@ TEST(LoginTest, validCredentials) {
     $("[data-testid=submit-button]").click();
     $("[data-testid=welcome-message]")
         .shouldHave(have::exactText("Welcome, user1!"));
+    closeWebDriver();
 }
