@@ -1,19 +1,19 @@
 # selenide-cpp-multistack-app-tests
 
-C++ e2e tests for the Multistack demo app on
-[qa-guru/selenide-cpp](https://github.com/qa-guru/selenide-cpp) —
-Google Test + `FetchContent` dependency (`v0.1.2`).
+Two Google Test login checks against
+[autotests.ai](https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login):
+wrong password and valid `user1` / `password1` credentials.
 
-## Run
+Requires CMake 3.20+, C++17, libcurl headers/library and Chrome/ChromeDriver.
+Uses [selenide-cpp](https://github.com/qa-guru/selenide-cpp) `v0.1.2`
+and Google Test `v1.15.2` through CMake FetchContent.
 
 ```bash
 chromedriver --port=9515 &
 cmake -B build && cmake --build build && ./build/login_test
 ```
 
-Tests run against
-[autotests.ai](https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login).
+To test local framework changes, add
+`-DFETCHCONTENT_SOURCE_DIR_SELENIDE=/path/to/selenide-cpp` to `cmake -B build`.
 
-## License
-
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
