@@ -3,6 +3,15 @@
 #include "selenide.hpp"
 using namespace selenide;
 
+TEST(LoginTest, wrongPassword) {
+    open("https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login");
+    $("[data-testid=login-input]").setValue("user1");
+    $("[data-testid=password-input]").setValue("wrongpassword");
+    $("[data-testid=submit-button]").click();
+    $("[data-testid=error-message]")
+        .shouldHave(have::exactText("Wrong login or password"));
+}
+
 TEST(LoginTest, validCredentials) {
     open("https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login");
     $("[data-testid=login-input]").setValue("user1");
@@ -10,14 +19,4 @@ TEST(LoginTest, validCredentials) {
     $("[data-testid=submit-button]").click();
     $("[data-testid=welcome-message]")
         .shouldHave(have::exactText("Welcome, user1!"));
-}
-
-TEST(LoginTest, wrongPassword) {
-    execute("localStorage.clear()");  // drop the session from the previous test
-    open("https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login");
-    $("[data-testid=login-input]").setValue("user1");
-    $("[data-testid=password-input]").setValue("wrongpassword");
-    $("[data-testid=submit-button]").click();
-    $("[data-testid=error-message]")
-        .shouldHave(have::exactText("Wrong login or password"));
 }
