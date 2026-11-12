@@ -1,5 +1,6 @@
 // login_test.cpp — login e2e for the Multistack prod deployment.
-// Two tests: valid credentials land on home, wrong password shows an error.
+// Mirrors tests/e2e/LoginTests.java from the canonical suite.
+#include <gtest/gtest.h>
 #include "selenide.hpp"
 
 static std::string envOr(const char* key, const char* fallback) {
@@ -14,47 +15,52 @@ static const std::string BASE = envOr(
 static const std::string USER = envOr("SEEDED_USER", "user1");
 static const std::string PASS = envOr("SEEDED_PASSWORD", "password1");
 
-static void dumpState(const char* where) {
+// Fixture == TestBase: per-test fresh anonymous login page,
+// url + screenshot on failure (Selenide screenshot-on-failure analogue).
+class LoginTest : public testing::Test {
+protected:
+    static void SetUpTestSuite() {
+        selenide::Configuration::webdriverUrl =
+            envOr("WEBDRIVER_URL", "http://127.0.0.1:9515");
+        selenide::Configuration::headless =
+            envOr("HEADLESS", "true") != "false";
+    }
+
+    void SetUp() override {
+        using namespace selenide;
+        open(BASE + "/login");
+        execute("localStorage.clear(); sessionStorage.clear()");
+        open(BASE + "/login");
+        $("[data-testid=login-form-title]")
+            .shouldHave(have::exactText("Login Form"));
+    }
+
+    void TearDown() override {
+        if (!HasFailure()) return;
+        using namespace selenide;
+        try {
+            std::cerr << "url: "
+                      << execute("return location.href").get<std::string>() << "\n";
+            screenshot("fail.png");
+            std::cerr << "screenshot: fail.png\n";
+        } catch (...) {}
+    }
+};
+
+TEST_F(LoginTest, shouldLoginWithValidCredentials) {
     using namespace selenide;
-    try {
-        std::cerr << "--- " << where << " ---\n";
-        std::cerr << "url: " << execute("return location.href").get<std::string>() << "\n";
-        screenshot("fail.png");
-        std::cerr << "screenshot: fail.png\n";
-    } catch (...) {}
-}
-
-static void step(const char* name) { std::cout << "[step] " << name << "\n"; }
-
-int main() {
-    using namespace selenide;
-    Configuration::webdriverUrl = envOr("WEBDRIVER_URL", "http://127.0.0.1:9515");
-    Configuration::headless = envOr("HEADLESS", "true") != "false";
-
-    try {
-
-    step("user can login with valid credentials");
-    open(BASE + "/login");
     $("[data-testid=login-input]").setValue(USER);
     $("[data-testid=password-input]").setValue(PASS);
     $("[data-testid=submit-button]").click();
     $("[data-testid=welcome-message]")
         .shouldHave(have::exactText("Welcome, " + USER + "!"));
+}
 
-    step("wrong password shows readable error");
-    execute("localStorage.clear()");
-    open(BASE + "/login");
+TEST_F(LoginTest, shouldShowErrorWhenPasswordIsWrong) {
+    using namespace selenide;
     $("[data-testid=login-input]").setValue(USER);
     $("[data-testid=password-input]").setValue("wrongpassword");
     $("[data-testid=submit-button]").click();
     $("[data-testid=error-message]")
         .shouldHave(have::exactText("Wrong login or password"));
-
-    std::cout << "PASS\n";
-    return 0;
-
-    } catch (const std::exception& e) {
-        dumpState(e.what());
-        return 1;
-    }
 }

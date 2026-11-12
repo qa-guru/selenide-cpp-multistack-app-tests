@@ -6,11 +6,20 @@ as a CMake dependency via `FetchContent` (tag `v0.1.1`).
 
 ## Tests
 
-| File | Cases |
-|------|-------|
-| `tests/login_test.cpp` | valid credentials → welcome panel; wrong password → "Wrong login or password" |
+| File | Cases (each `TEST_F` is its own CTest test) |
+|------|---------------------------------------------|
+| `tests/login_test.cpp` | `shouldLoginWithValidCredentials`, `shouldShowErrorWhenPasswordIsWrong` |
 
-Every `tests/*_test.cpp` becomes a CTest target automatically.
+Tests are written on **Google Test** (fetched at configure time): a fixture
+(`LoginTest`) plays `TestBase` — fresh anonymous login page per test,
+url + screenshot on failure. Every `tests/*_test.cpp` becomes a binary and
+`gtest_discover_tests` registers each `TEST_F` as a separate CTest case, so a
+run reports per-method results:
+
+```
+1/2 Test #1: LoginTest.shouldLoginWithValidCredentials ...... Passed
+2/2 Test #2: LoginTest.shouldShowErrorWhenPasswordIsWrong ... Passed
+```
 
 ## Configuration
 
