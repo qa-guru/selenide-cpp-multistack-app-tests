@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
 FetchContent_Declare(selenide
     GIT_REPOSITORY https://github.com/qa-guru/selenide-cpp.git
-    GIT_TAG v0.1.1)
+    GIT_TAG v0.1.2)
 FetchContent_Declare(googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_TAG v1.15.2)
