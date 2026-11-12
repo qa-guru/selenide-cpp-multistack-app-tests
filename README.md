@@ -12,8 +12,8 @@ cmake -B build && cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-Each `TEST` registers as its own CTest case. `BASE_URL` env overrides the
-stand (default: prod deployment). New suite = new `tests/*_test.cpp`.
+Each `TEST` registers as its own CTest case. Tests hit the prod deployment.
+New suite = new `tests/*_test.cpp`.
 
 ## License
 

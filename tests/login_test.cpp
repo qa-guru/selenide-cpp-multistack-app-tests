@@ -3,17 +3,8 @@
 #include "selenide.hpp"
 using namespace selenide;
 
-static const std::string BASE = getenv("BASE_URL") ? getenv("BASE_URL") :
-    "https://autotests.ai/stack/backend-java-spring/frontend-typescript-react";
-
-static void openLogin() {
-    open(BASE + "/login");
-    execute("localStorage.clear()");
-    open(BASE + "/login");  // reload so the cleared token can't auto-login
-}
-
 TEST(LoginTest, validCredentials) {
-    openLogin();
+    open("https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login");
     $("[data-testid=login-input]").setValue("user1");
     $("[data-testid=password-input]").setValue("password1");
     $("[data-testid=submit-button]").click();
@@ -22,7 +13,8 @@ TEST(LoginTest, validCredentials) {
 }
 
 TEST(LoginTest, wrongPassword) {
-    openLogin();
+    execute("localStorage.clear()");  // drop the session from the previous test
+    open("https://autotests.ai/stack/backend-java-spring/frontend-typescript-react/login");
     $("[data-testid=login-input]").setValue("user1");
     $("[data-testid=password-input]").setValue("wrongpassword");
     $("[data-testid=submit-button]").click();
