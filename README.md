@@ -8,7 +8,7 @@ One local lifecycle check verifies cleanup after session creation fails.
 Requires macOS/Linux, CMake 3.20+, C++17, libcurl headers/library, Chrome and a
 matching ChromeDriver in `PATH`. The framework starts/stops its own driver;
 no separate ChromeDriver server is needed.
-Uses [selenide-cpp](https://github.com/qa-guru/selenide-cpp) `v0.1.4`
+Uses [selenide-cpp](https://github.com/qa-guru/selenide-cpp) `v0.1.5`
 and Google Test `v1.15.2` through CMake FetchContent.
 
 First setup:

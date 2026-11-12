@@ -1,0 +1,19 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  login:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Ensure ChromeDriver
+        run: |
+          command -v chromedriver || brew install --cask chromedriver
+          xattr -d com.apple.quarantine "$(command -v chromedriver)" 2>/dev/null || true
+      - name: Build
+        run: cmake -B build && cmake --build build
+      - name: Run login tests
+        run: ./build/login_test

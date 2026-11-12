@@ -42,3 +42,9 @@ TEST(DriverTest, failedSessionClosesDriver) {
     EXPECT_EQ(error, ECHILD);
 }
 #endif
+
+TEST(DriverTest, executeRunsJs) {
+    EXPECT_EQ(execute("return arguments[0] + 1", {41}), 42);
+    EXPECT_EQ(executeAsync("arguments[arguments.length-1]('ok')"), "ok");
+    closeWebDriver();
+}
